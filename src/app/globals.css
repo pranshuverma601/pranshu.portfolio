@@ -3,4 +3,43 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Add any custom styles below */
+/* Subtle animated background + shared keyframes (works with Tailwind arbitrary animate-[]) */
+:root {
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    transform: translate3d(-2%, -2%, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(2%, 2%, 0) scale(1.03);
+  }
+  100% {
+    transform: translate3d(-2%, -2%, 0) scale(1);
+  }
+}
+
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -10px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

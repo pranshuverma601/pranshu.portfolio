@@ -35,6 +35,7 @@
 // src/app/layout.tsx
 import "./globals.css";
 import Navbar from "../components/Navbar";
+import BlogStrip from "../components/BlogStrip";
 import Footer from "../components/Footer";
 
 export const metadata = {
@@ -49,9 +50,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="flex flex-col min-h-screen">
+      <body className="relative flex min-h-screen flex-col overflow-x-hidden bg-gradient-to-b from-slate-50 via-white to-indigo-50/40 text-gray-900 dark:from-slate-950 dark:via-gray-950 dark:to-indigo-950/20 dark:text-gray-100">
+        {/* Global animated background */}
+        <div
+          aria-hidden
+          className="pointer-events-none fixed inset-0 -z-10"
+        >
+          <div className="absolute -top-24 left-1/2 h-[28rem] w-[28rem] -translate-x-1/2 rounded-full bg-gradient-to-tr from-indigo-500/20 via-violet-500/20 to-fuchsia-500/20 blur-3xl animate-[gradientShift_14s_ease-in-out_infinite]" />
+          <div className="absolute bottom-[-8rem] left-[-6rem] h-[22rem] w-[22rem] rounded-full bg-gradient-to-tr from-emerald-400/10 via-sky-400/10 to-indigo-400/10 blur-3xl animate-[floaty_12s_ease-in-out_infinite]" />
+          <div className="absolute right-[-7rem] top-1/3 h-[24rem] w-[24rem] rounded-full bg-gradient-to-tr from-fuchsia-500/10 via-violet-500/10 to-indigo-500/10 blur-3xl animate-[floaty_16s_ease-in-out_infinite]" />
+        </div>
+
         <Navbar />
-        <main className="flex-grow container mx-auto p-4">{children}</main>
+        <main className="container mx-auto flex-grow p-4">{children}</main>
+        <BlogStrip compact />
         <Footer />
       </body>
     </html>
