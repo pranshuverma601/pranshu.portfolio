@@ -1,5 +1,4 @@
 import Link from "next/link";
-import BlogStrip from "../components/BlogStrip";
 
 export default function HomePage() {
   return (
@@ -726,8 +725,68 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Blog Section */}
-      <BlogStrip />
+      {/* FAQ Section */}
+      <section id="faq" className="relative py-20">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-x-0 -top-10 mx-auto h-48 max-w-6xl bg-gradient-to-r from-indigo-500/10 via-violet-500/10 to-fuchsia-500/10 blur-3xl"
+        />
+
+        <div className="container mx-auto px-6">
+          <div className="mx-auto mb-10 max-w-3xl text-center">
+            <h2 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-white">
+              Frequently Asked Questions
+            </h2>
+            <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+              Quick answers about my services, timeline, and technologies.
+            </p>
+          </div>
+
+          <div className="mx-auto grid max-w-4xl gap-3">
+            {[
+              {
+                q: "What services do you provide?",
+                a: "I provide Dynamics 365 CRM backend development, PCF control development, Power Automate workflow implementation, and full-stack web application development with React/Next.js.",
+              },
+              {
+                q: "How quickly do you respond to new inquiries?",
+                a: "Usually within 24 hours. For urgent requirements, mention priority and timeline in your message.",
+              },
+              {
+                q: "Can you work on both CRM and web projects together?",
+                a: "Yes. I can handle hybrid requirements where CRM processes and web applications need to work together through integration and automation.",
+              },
+              {
+                q: "Which technologies are you strongest in?",
+                a: "Dynamics 365, Dataverse, PCF, Power Automate, TypeScript, JavaScript, React, Next.js, MongoDB, SQL, and backend-focused C# development.",
+              },
+              {
+                q: "Do you also work with AI tools and RAG?",
+                a: "Yes. I use Copilot and AI tools in development workflows, and I can create a RAG Agent approach for knowledge retrieval use cases.",
+              },
+            ].map((item, idx) => (
+              <details
+                key={item.q}
+                className="group rounded-2xl border border-black/5 bg-white/70 p-5 shadow-sm backdrop-blur transition hover:bg-white dark:border-white/10 dark:bg-gray-900/25 dark:hover:bg-gray-900/35"
+                open={idx === 0}
+              >
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-left">
+                  <span className="text-sm font-semibold text-gray-900 dark:text-white sm:text-base">
+                    {item.q}
+                  </span>
+                  <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-indigo-500 via-violet-500 to-fuchsia-500 text-xs font-bold text-white shadow-sm transition-transform duration-200 group-open:rotate-45">
+                    +
+                  </span>
+                </summary>
+                <p className="mt-3 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+                  {item.a}
+                </p>
+              </details>
+            ))}
+          </div>
+        </div>
+      </section>
+
     </div>
   );
 }

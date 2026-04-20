@@ -1,24 +1,57 @@
 // src/app/contact/page.tsx
 "use client";
 
+import emailjs from "@emailjs/browser";
 import { useState } from "react";
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
-  const [status, setStatus] = useState<"idle" | "sending" | "sent">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
+    "idle"
+  );
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (status === "sending") return;
 
+    const serviceId = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID;
+    const templateId = process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID;
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY;
+
+    if (!serviceId || !templateId || !publicKey) {
+      setStatus("error");
+      setErrorMessage(
+        "Email service is not configured yet. Please add EmailJS keys in environment variables."
+      );
+      return;
+    }
+
+    setErrorMessage("");
     setStatus("sending");
 
-    // Replace with a real API submission when you’re ready.
-    await new Promise((r) => setTimeout(r, 700));
-    console.log(form);
+    try {
+      await emailjs.send(
+        serviceId,
+        templateId,
+        {
+          from_name: form.name,
+          from_email: form.email,
+          message: form.message,
+          reply_to: form.email,
+        },
+        {
+          publicKey,
+        }
+      );
 
-    setStatus("sent");
-    setForm({ name: "", email: "", message: "" });
+      setStatus("sent");
+      setForm({ name: "", email: "", message: "" });
+    } catch (error) {
+      console.error("Email send failed:", error);
+      setStatus("error");
+      setErrorMessage("Failed to send message. Please try again.");
+    }
   };
 
   return (
@@ -114,7 +147,15 @@ export default function ContactPage() {
                   <span className="grid h-6 w-6 place-items-center rounded-lg bg-emerald-500 text-white">
                     ✓
                   </span>
-                  Message ready to send
+                  Message sent successfully
+                </div>
+              )}
+              {status === "error" && (
+                <div className="mt-3 inline-flex items-center gap-2 rounded-xl bg-rose-500/10 px-3 py-2 text-sm font-semibold text-rose-700 ring-1 ring-rose-500/20 sm:mt-0">
+                  <span className="grid h-6 w-6 place-items-center rounded-lg bg-rose-500 text-white">
+                    !
+                  </span>
+                  {errorMessage}
                 </div>
               )}
             </div>
@@ -127,6 +168,7 @@ export default function ContactPage() {
                   </label>
                   <input
                     required
+                    maxLength={80}
                     placeholder="Your name"
                     className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-gray-900 outline-none ring-0 transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/15"
                     value={form.name}
@@ -141,6 +183,7 @@ export default function ContactPage() {
                   <input
                     type="email"
                     required
+                    maxLength={120}
                     placeholder="you@example.com"
                     className="w-full rounded-xl border border-black/10 bg-white px-4 py-3 text-gray-900 outline-none ring-0 transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/15"
                     value={form.email}
@@ -157,6 +200,7 @@ export default function ContactPage() {
                 </label>
                 <textarea
                   required
+                  maxLength={800}
                   placeholder="Tell me about your project, stack, timeline, and what you need help with..."
                   rows={6}
                   className="w-full resize-none rounded-xl border border-black/10 bg-white px-4 py-3 text-gray-900 outline-none ring-0 transition focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/15"
